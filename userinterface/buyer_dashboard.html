@@ -1,0 +1,169 @@
+{% extends "index.html" %} 
+{% block content %}
+<div class="container my-5">
+  <!-- Welcome Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 p-4" style="background: linear-gradient(135deg, #f4c32f 0%, #cfeec1 100%);">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h2 class="fw-bold text-white mb-2">Welcome back, {{ user.first_name|default:user.username }}! 👋</h2>
+            <p class="text-white mb-0">Manage your orders, profile, and explore new products.</p>
+          </div>
+          <div class="col-md-4 text-end">
+            <img src="https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=150" 
+                 alt="Shopping" class="rounded-circle" width="80" height="80" style="object-fit: cover;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+        <div class="mb-3">
+          <i class="fas fa-shopping-bag text-primary" style="font-size: 2.5rem;"></i>
+        </div>
+        <h5 class="fw-bold">{{ recent_orders.count }}</h5>
+        <p class="text-muted mb-0">Total Orders</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+        <div class="mb-3">
+          <i class="fas fa-shopping-cart text-success" style="font-size: 2.5rem;"></i>
+        </div>
+        <h5 class="fw-bold">{{ cart_items_count }}</h5>
+        <p class="text-muted mb-0">Items in Cart</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+        <div class="mb-3">
+          <i class="fas fa-heart text-danger" style="font-size: 2.5rem;"></i>
+        </div>
+        <h5 class="fw-bold">0</h5>
+        <p class="text-muted mb-0">Wishlist Items</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+        <div class="mb-3">
+          <i class="fas fa-star text-warning" style="font-size: 2.5rem;"></i>
+        </div>
+        <h5 class="fw-bold">0</h5>
+        <p class="text-muted mb-0">Reviews Given</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <div class="row g-4">
+    <!-- Quick Actions -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Quick Actions</h5>
+          <div class="d-grid gap-3">
+            <a href="{% url 'cart' %}" class="btn premium-btn">
+              <i class="fas fa-shopping-cart me-2"></i>View Cart
+            </a>
+            <a href="{% url 'my_orders' %}" class="btn premium-outline-btn">
+              <i class="fas fa-list me-2"></i>My Orders
+            </a>
+            <a href="{% url 'edit_profile' %}" class="btn premium-outline-btn">
+              <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </a>
+            <a href="{% url 'index' %}" class="btn premium-outline-btn">
+              <i class="fas fa-store me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">Recent Orders</h5>
+            <a href="{% url 'my_orders' %}" class="btn btn-sm premium-outline-btn">View All</a>
+          </div>
+          
+          {% if recent_orders %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in recent_orders %}
+                  <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                    <td>
+                      <span class="badge 
+                        {% if order.status == 'delivered' %}bg-success
+                        {% elif order.status == 'shipped' %}bg-info
+                        {% elif order.status == 'confirmed' %}bg-primary
+                        {% elif order.status == 'cancelled' %}bg-danger
+                        {% else %}bg-warning{% endif %}">
+                        {{ order.get_status_display }}
+                      </span>
+                    </td>
+                    <td>₹{{ order.total_amount }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-4">
+              <i class="fas fa-shopping-bag text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No orders yet. Start shopping to see your orders here!</p>
+              <a href="{% url 'index' %}" class="btn premium-btn">Start Shopping</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Summary -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+          <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+              <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=100" 
+                   alt="Profile" class="rounded-circle" width="80" height="80" style="object-fit: cover;">
+            </div>
+            <div class="col-md-6">
+              <h5 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+              <p class="text-muted mb-1">{{ user.email }}</p>
+              <p class="text-muted mb-0">Member since {{ user.date_joined|date:"M Y" }}</p>
+            </div>
+            <div class="col-md-4 text-end">
+              <a href="{% url 'edit_profile' %}" class="btn premium-outline-btn">
+                <i class="fas fa-edit me-2"></i>Edit Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock content %}

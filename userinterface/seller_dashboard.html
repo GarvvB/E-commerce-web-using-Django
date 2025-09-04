@@ -1,0 +1,202 @@
+{% extends "index.html" %} 
+{% block content %}
+<div class="container my-5">
+  <!-- Welcome Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4 p-4" style="background: linear-gradient(135deg, #2e4a38 0%, #3c5e4b 100%);">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h2 class="fw-bold text-white mb-2">{{ seller_profile.shop_name }} Dashboard 🏪</h2>
+            <p class="text-white mb-0">Manage your products, track sales, and grow your business.</p>
+          </div>
+          <div class="col-md-4 text-end">
+            <img src="https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=150" 
+                 alt="Store" class="rounded-circle" width="80" height="80" style="object-fit: cover;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 inventory-summary-card">
+        <div class="mb-3">
+          <i class="fas fa-box text-primary" style="font-size: 2.5rem;"></i>
+        </div>
+        <h4 class="summary-value">{{ total_products }}</h4>
+        <p class="summary-title">Total Products</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 inventory-summary-card">
+        <div class="mb-3">
+          <i class="fas fa-cubes text-success" style="font-size: 2.5rem;"></i>
+        </div>
+        <h4 class="summary-value">{{ total_quantity }}</h4>
+        <p class="summary-title">Total Inventory</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 inventory-summary-card">
+        <div class="mb-3">
+          <i class="fas fa-rupee-sign text-warning" style="font-size: 2.5rem;"></i>
+        </div>
+        <h4 class="summary-value">₹{{ total_value|floatformat:0 }}</h4>
+        <p class="summary-title">Inventory Value</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 inventory-summary-card">
+        <div class="mb-3">
+          <i class="fas fa-chart-line text-info" style="font-size: 2.5rem;"></i>
+        </div>
+        <h4 class="summary-value">{{ recent_orders.count }}</h4>
+        <p class="summary-title">Recent Sales</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Row -->
+  <div class="row g-4">
+    <!-- Quick Actions -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Quick Actions</h5>
+          <div class="d-grid gap-3">
+            <a href="{% url 'addproduct' %}" class="btn premium-btn">
+              <i class="fas fa-plus me-2"></i>Add New Product
+            </a>
+            <a href="{% url 'showproduct' %}" class="btn premium-outline-btn">
+              <i class="fas fa-list me-2"></i>Manage Products
+            </a>
+            <a href="#" class="btn premium-outline-btn">
+              <i class="fas fa-chart-bar me-2"></i>View Analytics
+            </a>
+            <a href="{% url 'edit_profile' %}" class="btn premium-outline-btn">
+              <i class="fas fa-user-edit me-2"></i>Edit Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Products -->
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm rounded-4 h-100">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">Your Products</h5>
+            <a href="{% url 'showproduct' %}" class="btn btn-sm premium-outline-btn">View All</a>
+          </div>
+          
+          {% if products %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products|slice:":5" %}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" width="40" height="40" class="rounded me-3" style="object-fit: cover;">
+                        {% endif %}
+                        <div>
+                          <div class="fw-semibold">{{ product.name|truncatechars:20 }}</div>
+                          <small class="text-muted">{{ product.product_type }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>₹{{ product.price }}</td>
+                    <td>
+                      <span class="badge {% if product.quantity > 10 %}bg-success{% elif product.quantity > 0 %}bg-warning{% else %}bg-danger{% endif %}">
+                        {{ product.quantity }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge {% if product.is_available %}bg-success{% else %}bg-secondary{% endif %}">
+                        {% if product.is_available %}Active{% else %}Inactive{% endif %}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-sm">
+                        <a href="{% url 'updateproduct' product.id %}" class="btn btn-outline-primary btn-sm">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'deleteproduct' product.id %}" class="btn btn-outline-danger btn-sm">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-4">
+              <i class="fas fa-box-open text-muted" style="font-size: 3rem;"></i>
+              <p class="text-muted mt-3">No products yet. Add your first product to get started!</p>
+              <a href="{% url 'addproduct' %}" class="btn premium-btn">Add Product</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Sales -->
+  {% if recent_orders %}
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-4">Recent Sales</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Order #</th>
+                  <th>Product</th>
+                  <th>Buyer</th>
+                  <th>Quantity</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order_item in recent_orders|slice:":5" %}
+                <tr>
+                  <td>#{{ order_item.order.id }}</td>
+                  <td>{{ order_item.product.name|truncatechars:25 }}</td>
+                  <td>{{ order_item.order.buyer.username }}</td>
+                  <td>{{ order_item.quantity }}</td>
+                  <td>₹{{ order_item.price }}</td>
+                  <td>{{ order_item.order.created_at|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock content %}

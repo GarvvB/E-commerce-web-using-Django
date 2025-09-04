@@ -1,0 +1,63 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120" 
+                 alt="Profile" class="rounded-circle mb-3" width="100" height="100" style="object-fit: cover;">
+            <h3 class="fw-bold">Edit Profile</h3>
+            <p class="text-muted">Update your personal information</p>
+          </div>
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">First Name</label>
+                {{ form.first_name }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Last Name</label>
+                {{ form.last_name }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Email Address</label>
+                {{ form.email }}
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Username</label>
+                <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                <small class="text-muted">Username cannot be changed</small>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Account Type</label>
+                <input type="text" class="form-control" value="{{ user.get_role_display }}" readonly>
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">Member Since</label>
+                <input type="text" class="form-control" value="{{ user.date_joined|date:'F d, Y' }}" readonly>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <a href="{% if user.role == 'seller' %}{% url 'seller_dashboard' %}{% else %}{% url 'buyer_dashboard' %}{% endif %}" 
+                 class="btn premium-outline-btn">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+              </a>
+              <button type="submit" class="btn premium-btn">
+                <i class="fas fa-save me-2"></i>Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock content %}

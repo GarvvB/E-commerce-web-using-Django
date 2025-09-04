@@ -67,6 +67,19 @@
                 <img src="{% static 'icons/support_faq.svg' %}" width="22" />
               </a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+                Logout
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm me-2">
+                Login
+              </a>
+            </li>
+            {% endif %}
             <li class="nav-item">
               <a href="{% url 'becomeseller' %}" class="btn premium-btn">
                 Become a Seller
@@ -79,11 +92,24 @@
 
     <!-- Content Block -->
     {% block content %}
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="container py-5">
       {% for type in types %}
       <h3 class="section-heading mb-4 mt-5">{{ type }}</h3>
       <div class="row g-4">
-        {% for x in products %} {% if x.type|title == type %}
+        {% for x in products %} {% if x.product_type|title == type %}
         <div class="col-sm-6 col-md-4 col-lg-3">
           <div class="card product-card h-100 position-relative">
             <!-- Favorite Button -->
@@ -107,14 +133,18 @@
                   {{ x.description|linebreaksbr|truncatechars:80 }}
                 </p>
                 <p class="fw-bold text-green">₹{{ x.price }}</p>
-                <span class="badge bg-gold text-dark">{{ x.type }}</span>
+                <span class="badge bg-gold text-dark">{{ x.product_type }}</span>
                 <p class="text-success small">Return: {{ x.return_policy }}</p>
+                <p class="text-muted small">By: {{ x.seller.sellerprofile.shop_name }}</p>
               </div>
               <div class="mt-3 d-flex gap-2 flex-wrap">
-                <a href="#" class="btn premium-btn w-100">Buy Now</a>
-                <a href="#" class="btn premium-outline-btn w-100"
-                  >Add to Cart</a
-                >
+                <a href="{% url 'product_detail' x.id %}" class="btn premium-btn w-100">View Details</a>
+                {% if user.is_authenticated and user.role == 'buyer' %}
+                <form method="POST" action="{% url 'add_to_cart' x.id %}" class="w-100">
+                  {% csrf_token %}
+                  <button type="submit" class="btn premium-outline-btn w-100">Add to Cart</button>
+                </form>
+                {% endif %}
               </div>
             </div>
           </div>
