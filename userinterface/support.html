@@ -1,0 +1,177 @@
+{% extends "index.html" %} {% block content %} {% load static %}
+<div class="container my-5">
+  <!-- Heading -->
+  <div class="text-center mb-5">
+    <h2 class="section-heading">Support & Help Center</h2>
+    <p class="text-muted">
+      Find answers, contact us, or resolve any issue quickly.
+    </p>
+  </div>
+
+  <!-- Help Categories -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img src="{% static 'icons/orders.svg' %}" width="40" class="mb-3" />
+        <h5 class="mb-2">Orders & Tracking</h5>
+        <p class="text-muted">
+          Track your order, delivery status or cancel orders.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img src="{% static 'icons/payment.svg' %}" width="40" class="mb-3" />
+        <h5 class="mb-2">Payments & Refunds</h5>
+        <p class="text-muted">
+          Get help with payments, EMI, or refund timelines.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img src="{% static 'icons/return.png' %}" width="40" class="mb-3" />
+        <h5 class="mb-2">Returns & Cancellations</h5>
+        <p class="text-muted">Understand return policies and start a return.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img
+          src="{% static 'icons/account_user.svg' %}"
+          width="40"
+          class="mb-3"
+        />
+        <h5 class="mb-2">Account Settings</h5>
+        <p class="text-muted">Manage your login, password and personal info.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img
+          src="{% static 'icons/support_faq.svg' %}"
+          width="40"
+          class="mb-3"
+        />
+        <h5 class="mb-2">FAQs</h5>
+        <p class="text-muted">Quick answers to common customer questions.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card support-card h-100 p-4 text-center">
+        <img src="{% static 'icons/chat.svg' %}" width="40" class="mb-3" />
+        <h5 class="mb-2">Live Chat</h5>
+        <p class="text-muted">Chat with a real human for instant assistance.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="mb-5">
+    <h4 class="section-heading mb-4">Frequently Asked Questions</h4>
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq1">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse1"
+          >
+            How can I track my order?
+          </button>
+        </h2>
+        <div
+          id="collapse1"
+          class="accordion-collapse collapse show"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            You can track your order from the "My Orders" section under your
+            account.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq2">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse2"
+          >
+            What is your return policy?
+          </button>
+        </h2>
+        <div
+          id="collapse2"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            Products can be returned within 5-7 days as per product-specific
+            policies listed on the product page.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq3">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse3"
+          >
+            How do I cancel an order?
+          </button>
+        </h2>
+        <div
+          id="collapse3"
+          class="accordion-collapse collapse"
+          data-bs-parent="#faqAccordion"
+        >
+          <div class="accordion-body">
+            You can cancel orders from the "My Orders" section before it is
+            shipped.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Support Form -->
+  <div class="contact-support-section">
+    <h4 class="section-heading mb-3">Still need help? Contact Us</h4>
+    <form class="row g-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control form-input"
+          placeholder="Your Name"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <input
+          type="email"
+          class="form-control form-input"
+          placeholder="Your Email"
+          required
+        />
+      </div>
+      <div class="col-12">
+        <textarea
+          class="form-control form-input"
+          rows="4"
+          placeholder="Describe your issue..."
+          required
+        ></textarea>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn premium-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

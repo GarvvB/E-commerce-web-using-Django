@@ -1,0 +1,241 @@
+{% extends "index.html" %} {% block content %}
+<div
+  class="auth-wrap container d-flex align-items-center justify-content-center py-5"
+>
+  <div
+    class="auth-card shadow-lg border-0 rounded-4 p-4 p-md-5"
+    style="max-width: 560px; width: 100%; background: var(--card-bg, #fffef9)"
+  >
+    <!-- Brand / Title -->
+    <div class="text-center mb-4">
+      <h2
+        class="title-font fw-bold mb-2"
+        style="color: var(--primary, #2e4a38)"
+      >
+        Create your Account
+      </h2>
+      <p class="mb-0" style="color: #5f6b66">
+        Join our premium marketplace and start your journey.
+      </p>
+    </div>
+
+    <!-- Alerts (Django form errors) -->
+    {% if user_form.non_field_errors %}
+    <div class="alert alert-danger small">{{ user_form.non_field_errors }}</div>
+    {% endif %}
+
+    <!-- Registration Form -->
+    <form method="post" novalidate id="register-form">
+      {% csrf_token %}
+      <!-- Role selection -->
+      <div class="mb-3">
+        <label class="fw-semibold" style="color: var(--primary, #2e4a38)"
+          >Register as</label
+        >
+        <div class="d-flex gap-4 mt-2">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="role"
+              id="role_buyer"
+              value="buyer"
+              checked
+            />
+            <label class="form-check-label" for="role_buyer">Buyer</label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="role"
+              id="role_seller"
+              value="seller"
+            />
+            <label class="form-check-label" for="role_seller">Seller</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- We style Django's default paragraphs so you don't need widget_tweaks -->
+      <div class="form-grid">
+        {{ user_form.as_p }} {% if seller_form %}
+        <hr class="my-3" />
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span
+            class="title-font fw-semibold"
+            style="color: var(--primary, #2e4a38)"
+            >Seller Details (optional)</span
+          >
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary rounded-pill"
+            id="toggle-seller"
+          >
+            Show/Hide
+          </button>
+        </div>
+        <div id="seller-block">{{ seller_form.as_p }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password helpers (works if your form contains a 'password' and an optional 'password2') -->
+      <div class="d-flex justify-content-between align-items-center mt-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="show-pass" />
+          <label class="form-check-label small" for="show-pass"
+            >Show password</label
+          >
+        </div>
+        <span class="small text-muted">Minimum 8 characters recommended</span>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn w-100 py-2 rounded-pill fw-semibold mt-4 premium-btn"
+        style="
+          background: linear-gradient(135deg, var(--accent, #d4af37), #f4c32f);
+          border: none;
+        "
+      >
+        Create Account
+      </button>
+
+      <!-- Divider -->
+      <div class="divider my-4 d-flex align-items-center">
+        <span class="line flex-grow-1"></span>
+        <span class="px-3 small text-muted">or</span>
+        <span class="line flex-grow-1"></span>
+      </div>
+
+      <!-- Login Link -->
+      <div class="text-center">
+        <p class="mb-0">
+          Already have an account?
+          <a
+            href="{% url 'login' %}"
+            class="fw-semibold"
+            style="color: var(--primary, #2e4a38); text-decoration: underline"
+          >
+            Sign in
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Keep in-theme with your site variables */
+  .auth-card {
+    box-shadow: 0 12px 30px rgba(46, 74, 56, 0.12) !important;
+  }
+  .form-grid p {
+    margin-bottom: 1rem;
+  }
+  .form-grid p > label {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    color: var(--primary, #2e4a38);
+    font-size: 0.95rem;
+  }
+  .form-grid p > input,
+  .form-grid p > select,
+  .form-grid p > textarea {
+    width: 100%;
+    border: 1px solid #e5eadf;
+    background: #fff;
+    padding: 0.8rem 0.9rem;
+    border-radius: 14px;
+    outline: none;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .form-grid p > input:focus,
+  .form-grid p > select:focus,
+  .form-grid p > textarea:focus {
+    border-color: var(--accent, #d4af37);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+  }
+  .form-grid .helptext,
+  .form-grid ul.errorlist {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+  }
+  .form-grid ul.errorlist {
+    list-style: none;
+    padding-left: 0;
+    color: #a61d24;
+    font-weight: 600;
+  }
+  .divider .line {
+    height: 1px;
+    background: #e7eadf;
+    display: inline-block;
+  }
+  /* Hide seller block initially via JS if needed; CSS fallback below */
+  #seller-block[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  (function () {
+    // Optional Seller toggle (only if block exists)
+    const toggleBtn = document.getElementById("toggle-seller");
+    const sellerBlock = document.getElementById("seller-block");
+    if (toggleBtn && sellerBlock) {
+      // Start collapsed for a cleaner, symmetric first view
+      sellerBlock.hidden = true;
+      toggleBtn.addEventListener("click", () => {
+        sellerBlock.hidden = !sellerBlock.hidden;
+        toggleBtn.textContent = sellerBlock.hidden ? "Show" : "Hide";
+      });
+    }
+
+    // Show/Hide password behavior:
+    // We try to detect a password input by common IDs/names.
+    const showPass = document.getElementById("show-pass");
+    if (showPass) {
+      showPass.addEventListener("change", () => {
+        const passInputs = Array.from(
+          document.querySelectorAll(
+            'input[type="password"], input[data-password="true"]'
+          )
+        );
+        passInputs.forEach((inp) => {
+          // toggle type safely
+          try {
+            inp.type = showPass.checked ? "text" : "password";
+          } catch (e) {}
+        });
+      });
+    }
+
+    // If you include a confirm password field (e.g., name="password2"), do a quick client-side match check.
+    const form = document.getElementById("register-form");
+    form &&
+      form.addEventListener("submit", (e) => {
+        const pwd = document.querySelector('input[name="password"]');
+        const pwd2 = document.querySelector('input[name="password2"]');
+        if (pwd && pwd2 && pwd.value !== pwd2.value) {
+          e.preventDefault();
+          alert("Passwords do not match.");
+          pwd2.focus();
+        }
+      });
+
+    // Add placeholders for a familiar UX if your Django widgets don't have them
+    const setPh = (name, ph) => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (el && !el.placeholder) el.placeholder = ph;
+    };
+    setPh("username", "Choose a username");
+    setPh("email", "you@example.com");
+    setPh("password", "Create a password");
+    setPh("password2", "Confirm password");
+  })();
+</script>
+{% endblock content %}

@@ -1,0 +1,96 @@
+{% extends "index.html" %} {% block content %}
+<div class="container">
+  <div class="row p-5">
+    <!-- Left side illustration (only for large screens) -->
+    <div class="col-lg-6 d-none d-lg-block text-center">
+      <img
+        src="https://skajic.com/adminpanel/dist/img/login.jpg"
+        alt="Login Illustration"
+        class="img-fluid rounded-3 shadow"
+        style="max-height: 400px"
+      />
+    </div>
+
+    <!-- Right side login form -->
+    <div class="col-12 col-lg-6 p-5">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4 fw-bold text-primary">Welcome Back</h3>
+          <p class="text-center text-muted mb-4">
+            Login to continue your journey with Luxora
+          </p>
+
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Username / Email -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control rounded-3"
+                id="username"
+                name="username"
+                placeholder="Username or Email"
+                required
+              />
+              <label for="username">Username or Email</label>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-3">
+              <input
+                type="password"
+                class="form-control rounded-3"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <label for="password">Password</label>
+            </div>
+
+            <!-- Remember Me + Forgot Password -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="remember"
+                  name="remember"
+                />
+                <label class="form-check-label" for="remember">
+                  Remember Me
+                </label>
+              </div>
+              <a href="#" class="text-decoration-none text-primary fw-semibold">
+                Forgot Password?
+              </a>
+            </div>
+
+            <!-- Login Button -->
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-2 rounded-3 fw-bold"
+            >
+              Login
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="text-center my-3">
+            <span class="text-muted">OR</span>
+          </div>
+
+          <!-- Register Redirect -->
+          <div class="text-center">
+            <p class="mb-0">Don’t have an account?</p>
+            <a href="{% url 'register' %}" class="btn premium-btn mt-2 w-100">
+              Create an Account
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

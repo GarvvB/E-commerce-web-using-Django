@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form id="examplejson" method="post">
+      <label for="">GST Number </label>
+      <!-- the name below inside the text and the name created in the model variables should be same  -->
+      <input type="text" name="gstNumber" />
+      <label for="">Company Name </label>
+      <input type="text" name="CompanyName" />
+      <label for="">Email </label>
+      <input type="text" name="Email" />
+      <label for="">Phone Number </label>
+      <input type="text" name="PhoneNo" />
+      <label for="">Password </label>
+      <input type="text" name="Password" />
+      <label for="">Company Address </label>
+      <input type="text" name="CompanyAddress" />
+      <label for="">Company Type</label>
+      <input type="text" name="CompanyType" />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <script>
+      document
+        .getElementById("examplejson")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const payload = {
+            gstNumber: form.gstNumber.value,
+            CompanyName: form.CompanyName.value,
+            Email: form.Email.value,
+            PhoneNo: form.PhoneNo.value,
+            Password: form.Password.value,
+            CompanyAddress: form.CompanyAddress.value,
+            CompanyType: form.CompanyType.value,
+          };
+          try {
+            const res = await fetch("/api/register/", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await res.json();
+            const x = result["message"];
+            console.log(x);
+            if (x == "Successfully") {
+              alert("Company Register successfully! ");
+            } else {
+              const text = await res.text();
+              alert("Server errors " + text);
+            }
+          } catch (err) {
+            alert("Error");
+            console.error();
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+{% extends "index.html" %} {% block content %}
+
+<div class="container my-5">
+  <!-- ===== Seller Products Section ===== -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="section-heading">Your Products</h3>
+    <a href="{% url 'addproduct' %}" class="btn premium-btn">+ Add Product</a>
+  </div>
+
+  <div class="row g-4">
+    {% for product in products %}
+    <div class="col-md-6">
+      <div class="card p-3 shadow-sm border-0 rounded-4 seller-product-card">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-4">
+            <div class="product-img-container">
+              <img
+                src="{{ product.image.url }}"
+                class="product-img"
+                alt="{{ product.name }}"
+              />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <ul class="list-unstyled mb-3">
+              <li><strong>Name:</strong> {{ product.name }}</li>
+              <li><strong>Price:</strong> ₹{{ product.price }}</li>
+              <li><strong>Quantity:</strong> {{ product.quantity }}</li>
+              <li><strong>Type:</strong> {{ product.type }}</li>
+              <li><strong>Total Unit Sold:</strong> Coming Soon</li>
+              <li><strong>Total Income:</strong> Coming Soon</li>
+              <li><strong>Last Ordered:</strong> Coming Soon</li>
+            </ul>
+            <div class="d-flex gap-2">
+              <a
+                href="{% url 'updateproduct' product.id %}"
+                class="btn btn-sm btn-outline-primary"
+                >Update</a
+              >
+              <a
+                href="{% url 'deleteproduct' product.id %}"
+                class="btn btn-sm btn-outline-danger"
+                >Delete</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p class="text-muted">You haven't added any products yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ===== Inventory Summary Section ===== -->
+  <div class="mt-5">
+    <h3 class="section-heading mb-3">Inventory Summary</h3>
+    <div class="card p-4 shadow-sm border-0 rounded-4 inventory-summary-card">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <p class="summary-title"><b>Total Products</b></p>
+          <p class="summary-value">{{ products|length }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <p class="summary-title"><b>Total Quantity</b></p>
+          <p class="summary-value">{{ total_quantity }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <p class="summary-title"><b>Total Value</b></p>
+          <p class="summary-value">₹{{ total_value }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

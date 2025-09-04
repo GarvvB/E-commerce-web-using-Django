@@ -1,0 +1,89 @@
+{% extends "index.html" %} {% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 fw-bold text-center">Welcome, {{ request.user.username }}</h2>
+  
+  <!-- Stats section -->
+  <div class="row g-4 text-center mb-5">
+    <div class="col-md-4">
+      <div class="card p-4">
+        <h5 class="fw-bold">Total Products</h5>
+        <p class="fs-4 text-primary">{{ products.count }}</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4">
+        <h5 class="fw-bold">Total Quantity</h5>
+        <p class="fs-4 text-success">{{ total_quantity }}</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4">
+        <h5 class="fw-bold">Inventory Value</h5>
+        <p class="fs-4 text-danger">₹{{ total_value }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product list -->
+  <div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold">My Products</h4>
+      <a href="{% url 'addproduct' %}" class="btn btn-primary btn-sm"
+        >+ Add Product</a
+      >
+    </div>
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Type</th>
+          <th>Return Policy</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>
+            {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              width="60"
+              height="60"
+              class="rounded"
+            />
+            {% else %}
+            <span class="text-muted">No Image</span>
+            {% endif %}
+          </td>
+          <td>{{ product.name }}</td>
+          <td>₹{{ product.price }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>{{ product.type }}</td>
+          <td>{{ product.return_policy }}</td>
+          <td>
+            <a
+              href="{% url 'updateproduct' product.id %}"
+              class="btn btn-sm btn-outline-warning"
+              >Edit</a
+            >
+            <a
+              href="{% url 'deleteproduct' product.id %}"
+              class="btn btn-sm btn-outline-danger"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center text-muted">No products yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}
